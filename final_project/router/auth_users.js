@@ -43,11 +43,23 @@ regd_users.post("/login", (req,res) => {
 
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
-    const enteredReview = req.params.enteredReview;
+    const enteredReview = req.body.enteredReview;
     const isbn = req.params.isbn;
-    books[isbn]["reviews"] = enteredReview;
+    const username = req.body.username;
+    books[isbn]["reviews"] = {"review":enteredReview,"username":username};
     res.send("Review updated successfully!");
-    return res.status(200)
+});
+
+regd_users.delete("/auth/review/:isbn", (req,res) => {
+    const isbn = req.params.isbn;
+    const username = req.body.username;
+    if (books[isbn]["reviews"]["username"] == username) {
+        books[isbn]["reviews"] = {};
+        res.send("Review deleted successfully.")
+    }
+    else {
+        res.send("No review under username found")
+    }
 });
 
 module.exports.authenticated = regd_users;

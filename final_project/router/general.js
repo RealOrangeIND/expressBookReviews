@@ -4,6 +4,7 @@ let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
 let usersRegister = [];
+const axios = require('axios');
 
 const doesExist = (username)=>{
     let userswithsamename = usersRegister.filter((user)=>{
@@ -33,33 +34,50 @@ public_users.post("/register", (req,res) => {
 
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
-    res.send(JSON.stringify(books, null, 10))
+    const getList = new Promise((resolve, reject) => {
+        resolve(res.send(JSON.stringify(books)));
+    });
+    
+    getList.then(() => console.log("success"));
 });
 
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
-    const isbn = req.params.isbn;
-    res.send(books[isbn])
+    const getBook = new Promise((resolve, reject) => {
+        const isbn = req.params.isbn;
+        resolve(res.send(books[isbn]));
+    });
+    
+    getBook.then(() => console.log("success")); 
  });
   
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
-    const author = req.params.author;
-    for (i = 1; i < 11; i++) {
-        if (books[i]["author"] == author) {
-            res.send(books[i])
-        }
-    };
+    const getBookAuthor = new Promise((resolve, reject) => {
+        const author = req.params.author;
+        for (i = 1; i < 11; i++) {
+            if (books[i]["author"] == author) {
+                resolve(res.send(books[i]))
+            }
+        };
+    });
+    
+    getBookAuthor.then(() => console.log("success"));
 });
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
-    const title = req.params.title;
-    for (i = 1; i < 11; i++) {
-        if (books[i]["title"] == title) {
-            res.send(books[i])
-        }
-    };
+    const getBookTitle = new Promise((resolve, reject) => {
+        
+        const title = req.params.title;
+        for (i = 1; i < 11; i++) {
+            if (books[i]["title"] == title) {
+                resolve(res.send(books[i]))
+            }
+        };
+    }); 
+    
+    getBookTitle.then(() => console.log("success"));
 });
 
 //  Get book review
