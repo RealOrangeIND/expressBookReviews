@@ -43,7 +43,11 @@ regd_users.post("/login", (req,res) => {
 
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
-    
+    const enteredReview = req.params.enteredReview;
+    const isbn = req.params.isbn;
+    books[isbn]["reviews"] = enteredReview;
+    res.send("Review updated successfully!");
+    return res.status(200)
 });
 
 module.exports.authenticated = regd_users;
